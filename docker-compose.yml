@@ -1,0 +1,41 @@
+version: '2'
+services:
+    db:
+        image: mysql
+        ports:
+            - "3306:3306"
+        volumes:
+            - ./var/data/db:/var/lib/mysql
+        environment:
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    php:
+        build: ./php-fpm
+        ports:
+            - "9000:9000"
+        volumes:
+            - ${APPLICATIONS}:/var/www/applications:cached
+            - ./var/logs/applications:/var/www/logs:cached
+        links:
+            - db
+    nginx:
+        build: ./nginx
+        ports:
+            - "80:80"
+        links:
+            - php
+        volumes_from:
+            - php
+        volumes:
+            - ./nginx/sites-enabled/:/etc/nginx/sites-enabled:cached
+            - ./var/logs/nginx/:/var/log/nginx:cached
+    memcached:
+        build: ./memcached
+        volumes:
+            - ./var/data/memcached:/var/lib/memcached
+        ports:
+            - 11211
+        depends_on:
+            - php
