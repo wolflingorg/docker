@@ -26,17 +26,25 @@ RUN apk add --update \
     php7-tokenizer \
     php7-session \
     php7-simplexml \
+    php7-xmlwriter \
+    php7-xdebug \
     make \
     curl
 
 RUN rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
 RUN curl --insecure https://getcomposer.org/composer.phar -o /usr/bin/composer && chmod +x /usr/bin/composer
+RUN composer self-update
 
-ADD symfony.ini /etc/php7/php-fpm.d/
-ADD symfony.ini /etc/php7/cli/conf.d/
+ADD applications.ini /etc/php7/php-fpm.d/
+ADD applications.ini /etc/php7/cli/conf.d/
+ADD applications.ini /etc/php7/conf.d/
 
-ADD symfony.pool.conf /etc/php7/php-fpm.d/
+ADD xdebug.ini /etc/php7/php-fpm.d/
+ADD xdebug.ini /etc/php7/cli/conf.d/
+ADD xdebug.ini /etc/php7/conf.d/
+
+ADD applications.pool.conf /etc/php7/php-fpm.d/
 
 CMD ["php-fpm7", "-F"]
 

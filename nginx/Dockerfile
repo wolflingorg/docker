@@ -6,6 +6,7 @@ RUN apk add --update nginx
 RUN rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
 ADD nginx.conf /etc/nginx/
+ADD sites-enabled /etc/nginx/sites-enabled
 
 RUN echo "upstream php-upstream { server php:9001; }" > /etc/nginx/conf.d/upstream.conf
 

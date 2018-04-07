@@ -13,11 +13,13 @@ services:
             - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     php:
         build: ./php-fpm
-        ports:
-            - "9000:9000"
+        expose:
+            - "9000"
         volumes:
-            - ${APPLICATIONS}:/var/www/applications:cached
-            - ./var/logs/applications:/var/www/logs:cached
+            - ${APPLICATIONS}:/var/www/applications
+            - ./var/logs/applications:/var/www/logs
+        environment:
+            - XDEBUG_REMOTE_HOST=${HOST_IP}
         links:
             - db
     nginx:
@@ -29,13 +31,12 @@ services:
         volumes_from:
             - php
         volumes:
-            - ./nginx/sites-enabled/:/etc/nginx/sites-enabled:cached
-            - ./var/logs/nginx/:/var/log/nginx:cached
+            - ./var/logs/nginx/:/var/log/nginx
     memcached:
         build: ./memcached
         volumes:
             - ./var/data/memcached:/var/lib/memcached
         ports:
-            - 11211
+            - "11211"
         depends_on:
             - php
