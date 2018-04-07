@@ -5,7 +5,7 @@ services:
         ports:
             - "3306:3306"
         volumes:
-            - ./var/data/db:/var/lib/mysql
+            - ${DATA_DIRECTORY}/db:/var/lib/mysql
         environment:
             - MYSQL_DATABASE=${MYSQL_DATABASE}
             - MYSQL_USER=${MYSQL_USER}
@@ -16,8 +16,8 @@ services:
         expose:
             - "9000"
         volumes:
-            - ${APPLICATIONS}:/var/www/applications
-            - ./var/logs/applications:/var/www/logs
+            - ${APPLICATIONS_DIRECTORY}:/var/www/applications
+            - ${LOGS_DIRECTORY}/applications:/var/www/logs
         environment:
             - XDEBUG_REMOTE_HOST=${HOST_IP}
         links:
@@ -31,11 +31,11 @@ services:
         volumes_from:
             - php
         volumes:
-            - ./var/logs/nginx/:/var/log/nginx
+            - ${LOGS_DIRECTORY}/nginx/:/var/log/nginx
     memcached:
         build: ./memcached
         volumes:
-            - ./var/data/memcached:/var/lib/memcached
+            - ${DATA_DIRECTORY}/memcached:/var/lib/memcached
         ports:
             - "11211"
         depends_on:
