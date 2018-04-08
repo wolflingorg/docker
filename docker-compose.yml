@@ -1,7 +1,10 @@
 version: '2'
 services:
-    db:
-        image: mysql
+    mysql:
+        build: 
+            context: ./mysql
+            args:
+                - MYSQL_VERSION=${MYSQL_VERSION}
         ports:
             - "3306:3306"
         volumes:
@@ -21,7 +24,7 @@ services:
         environment:
             - XDEBUG_REMOTE_HOST=${HOST_IP}
         links:
-            - db
+            - mysql
     nginx:
         build: ./nginx
         ports:
