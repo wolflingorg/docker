@@ -1,0 +1,11 @@
+version: '2'
+services:
+    php:
+        build: ./php-fpm
+        expose:
+            - "9000"
+        volumes:
+            - ${APPLICATIONS_DIRECTORY}:/var/www/applications
+            - ${LOGS_DIRECTORY}/applications:/var/www/logs
+        environment:
+            - XDEBUG_REMOTE_HOST=${HOST_IP}
